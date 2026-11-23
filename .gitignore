@@ -1,0 +1,30 @@
+# Data (WESAD raw and intermediate files are never committed)
+data/*
+!data/.gitkeep
+*.pkl
+*.npz
+*.npy
+*.h5
+*.parquet
+
+# Results: keep final CSVs, ignore scratch outputs
+results/scratch/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

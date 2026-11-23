@@ -1,0 +1,19 @@
+name: ece6081
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - pyyaml
+  - tqdm
+  - jupyterlab
+  - cvxopt          # cvxEDA (neurokit2 eda_phasic method="cvxeda")
+  - pip
+  - pip:
+      - neurokit2
+# 실험 시작 전 `conda env export --no-builds > environment.lock.yml`로 버전을 고정해 함께 커밋할 것.
