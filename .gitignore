@@ -7,8 +7,12 @@ data/*
 *.h5
 *.parquet
 
-# Results: keep final CSVs, ignore scratch outputs
+# Results: keep final CSVs, ignore scratch and synthetic-run outputs
 results/scratch/
+results/synthetic/
+
+# Trained fold models
+outputs/
 *.log
 
 # Python

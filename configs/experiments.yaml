@@ -1,0 +1,59 @@
+# 모델(M1, M2)과 RQ 설정. "TODO"가 붙은 값은 docs/decisions.md에서 아직 미정인 항목이다.
+# 실행 시 --set key=value 로 덮어쓸 수 있다 (예: --set m2.pretrain.epochs=5).
+
+encoder:                      # M1·M2가 같은 구조를 쓴다
+  channels: [32, 64, 128]     # 마지막 값 = 임베딩 차원 (h_E, h_B = 128-d)
+  strides: [1, 2, 2]
+  blocks_per_stage: 1
+  kernel_size: 7
+  eda_stem: {stride: 1, pool: 1}   # 240 pts
+  bvp_stem: {stride: 4, pool: 2}   # 3,840 pts -> 480 pts 후 ResNet
+
+m1:
+  epochs: 40                  # TODO: 하이퍼파라미터 고정값
+  batch_size: 32
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  fusion_mode: joint          # TODO: joint = 두 인코더+Linear를 함께 학습 / frozen = 단일 모델 인코더 동결 후 Linear만
+
+m2:
+  pretrain:
+    source: continuous        # continuous = 학습 참가자 전체 기록에서 60초 무작위 crop (라벨 미사용) / windows = 공통 구간만
+    crops_per_subject: 256    # epoch마다 참가자당 crop 수
+    epochs: 60                # TODO
+    batch_size: 64
+    lr: 1.0e-3
+    weight_decay: 1.0e-4
+    ema: 0.996
+    proj_dim: 128
+    pred_hidden: 256
+    var_weight: 1.0           # mu
+    cov_weight: 0.04          # nu
+  head:                       # 동결 인코더 위 Linear
+    epochs: 200
+    batch_size: 64
+    lr: 1.0e-3
+    weight_decay: 1.0e-4
+
+rq2:
+  model: m2
+  noise:
+    type: gaussian            # TODO: 잡음 종류 (gaussian = 백색 잡음)
+    levels: {weak: 10, strong: 0}   # TODO: SNR (dB). 구간별 깨끗한 BVP 전력 기준
+    seed: 2026
+
+rq3:
+  model: m2
+  w_grid: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]   # w = EDA 가중치
+  tie_break: closest_to_0.5   # TODO: 동률 처리
+  inner_pretrain: retrain     # retrain = 내부 fold마다 JEPA 재사전학습 (엄격) / reuse_outer = 외부 fold 인코더 재사용
+
+rq4:
+  model: m2
+  second_seed: 43
+  bootstrap: false            # TODO: true면 두 번째 구성원은 학습 참가자를 참가자 단위로 복원 추출
+
+rq1:
+  model: m2
+  overlap: jaccard           # TODO: 오류 중복 지표
+  empty_union: nan            # TODO: 두 모델 모두 오류가 없을 때 (nan / one)

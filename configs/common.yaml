@@ -1,7 +1,12 @@
-# 모든 모델·조건·RQ가 공유하는 실험 설정. 변경 시 docs/decisions.md에 날짜와 이유를 기록할 것.
+# 모든 모델·조건·RQ가 공유하는 실험 설정. 값을 바꾸면 docs/decisions.md에도 반영할 것.
+
+paths:
+  raw_dir: data/raw/WESAD            # S2/S2.pkl ... S17/S17.pkl
+  processed_dir: data/processed      # make_windows.py 출력 (git 제외)
+  results_dir: results               # 제출용 CSV
+  models_dir: outputs/models         # fold별 학습된 모델 (git 제외)
 
 data:
-  raw_dir: data/raw/WESAD
   # WESAD 원본에는 S1, S12가 없음 -> 15명
   subjects: [S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S13, S14, S15, S16, S17]
   signals:
@@ -25,8 +30,9 @@ evaluation:
   outer: loso
   inner:
     scheme: group_kfold       # 외부 학습 참가자 내부, 참가자 단위
-    n_splits: 3               # TODO: docs/decisions.md에서 확정
-  metric: macro_f1
+    n_splits: 3
+  metric: macro_f1            # 참가자별 계산 후 15명 평균 ± SD
+  threshold: 0.5
   seed: 42
 
 baseline:
