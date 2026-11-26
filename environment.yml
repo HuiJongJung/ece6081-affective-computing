@@ -14,8 +14,8 @@ dependencies:
   - jupyterlab
   - pip
   - pip:
-      # GPU(CUDA 12.1)용. CPU만 쓸 경우 --index-url 줄을 지우면 된다.
-      - --index-url https://download.pytorch.org/whl/cu121
-      - --extra-index-url https://pypi.org/simple
-      - torch
+      # GPU(CUDA 12.8)용. RTX 50 시리즈(Blackwell, sm_120)는 cu128 빌드 torch 2.7 이상이 필요하다.
+      # CPU만 쓸 경우 --index-url 줄을 지우면 된다.
+      - --index-url https://download.pytorch.org/whl/cu128
+      - torch>=2.7
 # 실험 시작 전 `conda env export --no-builds > environment.lock.yml`로 버전을 고정해 함께 커밋할 것.

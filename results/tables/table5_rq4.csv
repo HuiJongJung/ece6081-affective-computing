@@ -1,0 +1,8 @@
+config,macro_f1 (mean ± SD),member disagreement,EDA+BVP better / worse (subjects)
+EDA #1,0.516 ± 0.303,—,12 / 3
+EDA #2,0.546 ± 0.274,—,11 / 4
+EDA + EDA,0.524 ± 0.293,0.043,12 / 3
+BVP #1,0.825 ± 0.141,—,6 / 8
+BVP #2,0.818 ± 0.160,—,7 / 7
+BVP + BVP,0.832 ± 0.152,0.053,3 / 10
+EDA + BVP (prediction fusion),0.725 ± 0.189,0.444,—
